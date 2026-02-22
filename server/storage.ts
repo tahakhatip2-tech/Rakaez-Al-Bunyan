@@ -1,9 +1,9 @@
-import { db } from "./db";
+import { db } from "./db.js";
 import {
   projects, services, articles, reviews, partners,
   type InsertProject, type InsertService, type InsertArticle, type InsertReview, type InsertPartner,
   type Project, type Service, type Article, type Review, type Partner
-} from "@shared/schema";
+} from "../shared/schema.js";
 import { eq } from "drizzle-orm";
 
 export interface IStorage {
