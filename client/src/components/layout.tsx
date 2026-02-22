@@ -41,7 +41,7 @@ export function Layout({ children }: LayoutProps) {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <Phone className="w-4 h-4" />
-            <span>+966 50 123 4567</span>
+            <span>0782633162</span>
           </div>
           <div className="flex items-center gap-2">
             <Mail className="w-4 h-4" />
@@ -50,7 +50,7 @@ export function Layout({ children }: LayoutProps) {
         </div>
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4" />
-          <span>المملكة العربية السعودية، الرياض</span>
+          <span>الأردن، عمان، حي عدن</span>
         </div>
       </div>
 
@@ -186,11 +186,11 @@ export function Layout({ children }: LayoutProps) {
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
-                  <span>المملكة العربية السعودية، الرياض، شارع التحلية</span>
+                  <span>الأردن، عمان، حي عدن، مجمع رباح، ط 3، مكتب 7</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-primary shrink-0" />
-                  <span dir="ltr">+966 50 123 4567</span>
+                  <span dir="ltr">0782633162</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-primary shrink-0" />
@@ -201,7 +201,10 @@ export function Layout({ children }: LayoutProps) {
           </div>
           
           <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-            <p>جميع الحقوق محفوظة © {new Date().getFullYear()} شركة ركائز البنيان</p>
+            <div className="flex flex-col gap-1">
+              <p>جميع الحقوق محفوظة © {new Date().getFullYear()} شركة ركائز البنيان</p>
+              <p className="text-xs opacity-70">بواسطة الخطيب للبرمجيات</p>
+            </div>
             <p>تم التصميم والتطوير بكل إتقان</p>
           </div>
         </div>
@@ -209,7 +212,7 @@ export function Layout({ children }: LayoutProps) {
 
       {/* Floating WhatsApp Button */}
       <a 
-        href="https://wa.me/966501234567" 
+        href="https://wa.me/962782633162" 
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-6 left-6 z-[100] w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg shadow-[#25D366]/40 hover:scale-110 hover:shadow-xl transition-all duration-300"

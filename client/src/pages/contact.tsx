@@ -45,7 +45,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-lg mb-1">العنوان</h4>
-                    <p className="text-muted-foreground">المملكة العربية السعودية<br/>الرياض، شارع التحلية، مبنى 123</p>
+                    <p className="text-muted-foreground">الأردن، عمان<br/>حي عدن، مجمع رباح، ط 3، مكتب 7</p>
                   </div>
                 </div>
 
@@ -55,7 +55,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-lg mb-1">الهاتف</h4>
-                    <p className="text-muted-foreground" dir="ltr">+966 50 123 4567<br/>+966 11 234 5678</p>
+                    <p className="text-muted-foreground" dir="ltr">0782633162</p>
                   </div>
                 </div>
 
