@@ -55,16 +55,15 @@ export function Layout({ children }: LayoutProps) {
       </div>
 
       {/* Main Header */}
-      <header 
-        className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled ? "bg-white/90 backdrop-blur-md shadow-md py-3" : "bg-white py-5"
-        }`}
+      <header
+        className={`sticky top-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white/90 backdrop-blur-md shadow-md py-3" : "bg-white py-5"
+          }`}
       >
         <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white group-hover:rotate-12 transition-transform shadow-lg shadow-primary/30">
-              <HardHat className="w-7 h-7" />
+            <div className="w-16 h-16 transition-transform group-hover:scale-105">
+              <img src="/logo.png" alt="ركائز البنيان" className="w-full h-full object-contain" />
             </div>
             <div>
               <h1 className="text-2xl font-bold font-display text-foreground leading-none">ركائز البنيان</h1>
@@ -75,14 +74,13 @@ export function Layout({ children }: LayoutProps) {
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link 
-                key={link.path} 
+              <Link
+                key={link.path}
                 href={link.path}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  location === link.path 
-                    ? "bg-primary/10 text-primary" 
-                    : "text-foreground hover:bg-muted hover:text-primary"
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${location === link.path
+                  ? "bg-primary/10 text-primary"
+                  : "text-foreground hover:bg-muted hover:text-primary"
+                  }`}
               >
                 {link.name}
               </Link>
@@ -96,8 +94,8 @@ export function Layout({ children }: LayoutProps) {
                 طلب تسعيرة
               </Button>
             </Link>
-            
-            <button 
+
+            <button
               className="lg:hidden text-foreground p-2 rounded-md hover:bg-muted"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
@@ -110,14 +108,13 @@ export function Layout({ children }: LayoutProps) {
         {mobileMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 w-full bg-white border-t shadow-lg py-4 px-4 flex flex-col gap-2">
             {navLinks.map((link) => (
-              <Link 
-                key={link.path} 
+              <Link
+                key={link.path}
                 href={link.path}
-                className={`px-4 py-3 rounded-lg font-medium transition-colors ${
-                  location === link.path 
-                    ? "bg-primary/10 text-primary" 
-                    : "text-foreground hover:bg-muted"
-                }`}
+                className={`px-4 py-3 rounded-lg font-medium transition-colors ${location === link.path
+                  ? "bg-primary/10 text-primary"
+                  : "text-foreground hover:bg-muted"
+                  }`}
               >
                 {link.name}
               </Link>
@@ -140,8 +137,8 @@ export function Layout({ children }: LayoutProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
-                  <HardHat className="w-6 h-6" />
+                <div className="w-16 h-16">
+                  <img src="/logo.png" alt="ركائز البنيان" className="w-full h-full object-contain" />
                 </div>
                 <h2 className="text-2xl font-bold font-display text-white">ركائز البنيان</h2>
               </div>
@@ -149,7 +146,7 @@ export function Layout({ children }: LayoutProps) {
                 شركة ركائز البنيان للمقاولات العامة، رواد في مجال البناء والتشييد والتشطيبات بخبرة تمتد لسنوات، نقدم جودة لا تضاهى.
               </p>
             </div>
-            
+
             <div>
               <h3 className="text-xl font-bold text-white mb-6 font-display">روابط سريعة</h3>
               <ul className="space-y-3">
@@ -199,7 +196,7 @@ export function Layout({ children }: LayoutProps) {
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
             <div className="flex flex-col gap-1">
               <p>جميع الحقوق محفوظة © {new Date().getFullYear()} شركة ركائز البنيان</p>
@@ -211,9 +208,9 @@ export function Layout({ children }: LayoutProps) {
       </footer>
 
       {/* Floating WhatsApp Button */}
-      <a 
-        href="https://wa.me/962782633162" 
-        target="_blank" 
+      <a
+        href="https://wa.me/962782633162"
+        target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 left-6 z-[100] w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg shadow-[#25D366]/40 hover:scale-110 hover:shadow-xl transition-all duration-300"
         aria-label="تواصل معنا عبر واتساب"

@@ -55,8 +55,8 @@ function AdminGuard({ children }: { children: React.ReactNode }) {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4" dir="rtl">
         <Card className="w-full max-w-md shadow-xl border-primary/20">
           <CardHeader className="text-center space-y-1">
-            <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8" />
+            <div className="w-24 h-24 mx-auto mb-4">
+              <img src="/logo.png" alt="ركائز البنيان" className="w-full h-full object-contain" />
             </div>
             <CardTitle className="text-2xl font-bold font-display text-primary">دخول الإدارة</CardTitle>
             <p className="text-muted-foreground">يرجى إدخال كلمة المرور للمتابعة</p>
@@ -77,10 +77,10 @@ function AdminGuard({ children }: { children: React.ReactNode }) {
               <Button type="submit" className="w-full h-12 text-lg font-bold rounded-xl shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90">
                 تسجيل الدخول
               </Button>
-              <Button 
-                type="button" 
-                variant="ghost" 
-                className="w-full" 
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full"
                 onClick={() => window.location.href = "/"}
               >
                 العودة للرئيسية
@@ -96,7 +96,9 @@ function AdminGuard({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-slate-50">
       <header className="bg-white border-b px-6 py-4 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold">ر</div>
+          <div className="w-12 h-12">
+            <img src="/logo.png" alt="" className="w-full h-full object-contain" />
+          </div>
           <h1 className="text-xl font-bold font-display">لوحة تحكم ركائز البنيان</h1>
         </div>
         <Button variant="outline" onClick={handleLogout} className="gap-2 text-destructive border-destructive/20 hover:bg-destructive/5 hover:text-destructive">
