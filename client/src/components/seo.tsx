@@ -10,7 +10,7 @@ interface SEOProps {
 }
 
 const SITE_NAME = "ركائز البنيان للمقاولات العامة";
-const BASE_URL = "https://rakaezalbonyan.vercel.app";
+const BASE_URL = "https://rakaez-eta.vercel.app";
 const DEFAULT_IMAGE = `${BASE_URL}/logo.png`;
 const DEFAULT_DESCRIPTION = "شركة ركائز البنيان للمقاولات العامة — متخصصون في الإنشاءات السكنية والتجارية، الدهانات، السباكة، الكهرباء، والديكورات الداخلية بأعلى معايير الجودة.";
 
