@@ -22,40 +22,41 @@ export default function Home() {
         url="https://rakaezalbonyan.vercel.app/"
       />
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* landing page hero modern construction site */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(https://images.unsplash.com/photo-1541888086425-d81bb19240f5?w=1920&h=1080&fit=crop)` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
         </div>
 
-        <div className="container relative z-10 mx-auto px-4 md:px-6 py-20">
-          <div className="max-w-3xl">
+        <div className="container relative z-10 mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
+              className="space-y-4"
             >
-              <span className="inline-block py-1 px-3 rounded-full bg-primary/20 text-primary font-bold text-sm mb-6 border border-primary/30 backdrop-blur-sm">
+              <span className="inline-block py-1 px-4 rounded-full bg-primary/20 text-primary font-bold text-sm mb-2 border border-primary/30 backdrop-blur-sm">
                 مرحباً بكم في شركة ركائز البنيان
               </span>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-display leading-tight drop-shadow-lg">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 font-display leading-tight drop-shadow-2xl">
                 نبني <span className="text-primary">مستقبلك</span> <br />بأسس راسخة وجودة عالية
               </h1>
-              <p className="text-xl text-gray-200 mb-10 leading-relaxed max-w-2xl drop-shadow">
+              <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
                 الخيار الأمثل للمقاولات العامة والتشطيبات. خبرة واسعة، دقة في التنفيذ، والالتزام بالمواعيد هو ما يميزنا.
               </p>
 
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap justify-center gap-4 pt-2">
                 <Link href="/services">
-                  <Button size="lg" className="rounded-full text-lg px-8 py-6 shadow-xl shadow-primary/30 hover:scale-105 transition-transform">
+                  <Button size="lg" className="rounded-full text-lg px-8 py-6 shadow-2xl shadow-primary/40 hover:scale-105 transition-transform">
                     استكشف خدماتنا
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button size="lg" variant="outline" className="rounded-full text-lg px-8 py-6 bg-white/10 text-white border-white/30 hover:bg-white/20 backdrop-blur-md transition-all">
+                  <Button size="lg" variant="outline" className="rounded-full text-lg px-8 py-6 bg-white/10 text-white border-white/40 hover:bg-white/20 backdrop-blur-lg transition-all">
                     تواصل معنا
                   </Button>
                 </Link>
