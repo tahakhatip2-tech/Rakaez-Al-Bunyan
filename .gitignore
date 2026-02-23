@@ -1,7 +1,9 @@
 node_modules
 dist
 .env
+.env.local
 .DS_Store
 .local
 *.tar.gz
 server/public
+start-dev.ps1
