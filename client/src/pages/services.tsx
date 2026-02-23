@@ -3,22 +3,29 @@ import { useServices } from "@/hooks/use-services";
 import { Link } from "wouter";
 import { ArrowLeft, Wrench } from "lucide-react";
 import { motion } from "framer-motion";
+import { SEO } from "@/components/seo";
 
 export default function Services() {
   const { data: services, isLoading } = useServices();
 
   return (
     <div>
+      <SEO
+        title="خدماتنا"
+        description="خدمات ركائز البنيان للمقاولات: إنشاءات، دهانات، سباكة، كهرباء، ديكورات داخلية، وعزل. جميع الخدمات بأعلى جودة وأسعار تنافسية."
+        url="https://rakaezalbonyan.vercel.app/services"
+        keywords="خدمات مقاولات, دهانات, سباكة, كهرباء, ديكور داخلي, عزل, إنشاءات"
+      />
       {/* painting and finishing tools construction */}
-      <PageHero 
-        title="خدماتنا" 
+      <PageHero
+        title="خدماتنا"
         subtitle="مجموعة متكاملة من الخدمات بأعلى معايير الجودة والاحترافية"
         imageUrl="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=1920&h=1080&fit=crop"
       />
-      
+
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 md:px-6">
-          
+
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3, 4, 5, 6].map(i => (
@@ -32,7 +39,7 @@ export default function Services() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {services.map((service, index) => (
-                <motion.div 
+                <motion.div
                   key={service.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -40,9 +47,9 @@ export default function Services() {
                   className="bg-card rounded-2xl overflow-hidden shadow-lg border border-border group hover:border-primary transition-all duration-300 flex flex-col"
                 >
                   <div className="h-48 overflow-hidden">
-                    <img 
-                      src={service.image} 
-                      alt={service.title} 
+                    <img
+                      src={service.image}
+                      alt={service.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>

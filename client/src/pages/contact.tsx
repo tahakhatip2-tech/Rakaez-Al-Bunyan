@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { SEO } from "@/components/seo";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Contact() {
@@ -19,16 +20,16 @@ export default function Contact() {
   return (
     <div>
       {/* modern office building facade */}
-      <PageHero 
-        title="اتصل بنا" 
+      <PageHero
+        title="اتصل بنا"
         subtitle="نحن هنا للرد على استفساراتك وتلبية احتياجات مشروعك"
         imageUrl="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&h=1080&fit=crop"
       />
-      
+
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-            
+
             {/* Contact Info */}
             <div className="lg:col-span-2 space-y-8">
               <div>
@@ -45,7 +46,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-lg mb-1">العنوان</h4>
-                    <p className="text-muted-foreground">الأردن، عمان<br/>حي عدن، مجمع رباح، ط 3، مكتب 7</p>
+                    <p className="text-muted-foreground">الأردن، عمان<br />حي عدن، مجمع رباح، ط 3، مكتب 7</p>
                   </div>
                 </div>
 
@@ -65,7 +66,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-lg mb-1">البريد الإلكتروني</h4>
-                    <p className="text-muted-foreground">info@rakaez-albunyan.com<br/>sales@rakaez-albunyan.com</p>
+                    <p className="text-muted-foreground">info@rakaez-albunyan.com<br />sales@rakaez-albunyan.com</p>
                   </div>
                 </div>
 
@@ -75,7 +76,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-lg mb-1">ساعات العمل</h4>
-                    <p className="text-muted-foreground">الأحد - الخميس: 8:00 ص - 5:00 م<br/>السبت: 9:00 ص - 2:00 م</p>
+                    <p className="text-muted-foreground">الأحد - الخميس: 8:00 ص - 5:00 م<br />السبت: 9:00 ص - 2:00 م</p>
                   </div>
                 </div>
               </div>
@@ -112,10 +113,10 @@ export default function Contact() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">تفاصيل المشروع / الرسالة</label>
-                    <Textarea 
-                      placeholder="كيف يمكننا مساعدتك؟" 
-                      rows={5} 
-                      required 
+                    <Textarea
+                      placeholder="كيف يمكننا مساعدتك؟"
+                      rows={5}
+                      required
                       className="bg-muted/50 border-transparent focus:bg-white resize-none"
                     />
                   </div>

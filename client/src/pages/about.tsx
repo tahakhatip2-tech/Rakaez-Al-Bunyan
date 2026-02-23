@@ -1,21 +1,28 @@
 import { PageHero } from "@/components/page-hero";
 import { CheckCircle2, Target, Eye, Shield } from "lucide-react";
 import { motion } from "framer-motion";
+import { SEO } from "@/components/seo";
 
 export default function About() {
   return (
     <div>
+      <SEO
+        title="من نحن"
+        description="تعرف على شركة ركائز البنيان للمقاولات العامة — قصتنا، رؤيتنا، مهمتنا، وقيمنا الأساسية في عالم المقاولات والإنشاءات."
+        url="https://rakaezalbonyan.vercel.app/about"
+        keywords="من نحن, ركائز البنيان, شركة مقاولات, تاريخ الشركة, رؤية مهمة"
+      />
       {/* architecture blueprint and hardhat */}
-      <PageHero 
-        title="من نحن" 
+      <PageHero
+        title="من نحن"
         subtitle="تعرف على شركة ركائز البنيان ورؤيتها ومهمتها في عالم المقاولات"
         imageUrl="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1920&h=1080&fit=crop"
       />
-      
+
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-16"

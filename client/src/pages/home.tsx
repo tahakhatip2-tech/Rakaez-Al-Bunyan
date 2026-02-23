@@ -6,6 +6,7 @@ import { useServices } from "@/hooks/use-services";
 import { useProjects } from "@/hooks/use-projects";
 import { useReviews } from "@/hooks/use-reviews";
 import { usePartners } from "@/hooks/use-partners";
+import { SEO } from "@/components/seo";
 
 export default function Home() {
   const { data: services } = useServices();
@@ -15,16 +16,21 @@ export default function Home() {
 
   return (
     <div>
+      <SEO
+        title="الرئيسية"
+        description="ركائز البنيان للمقاولات العامة — متخصصون في الإنشاءات السكنية والتجارية، الدهانات، السباكة، الكهرباء، والديكورات الداخلية. جودة عالية وخبرة واسعة في المملكة العربية السعودية."
+        url="https://rakaezalbonyan.vercel.app/"
+      />
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         {/* landing page hero modern construction site */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(https://images.unsplash.com/photo-1541888086425-d81bb19240f5?w=1920&h=1080&fit=crop)` }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
         </div>
-        
+
         <div className="container relative z-10 mx-auto px-4 md:px-6 py-20">
           <div className="max-w-3xl">
             <motion.div
@@ -41,7 +47,7 @@ export default function Home() {
               <p className="text-xl text-gray-200 mb-10 leading-relaxed max-w-2xl drop-shadow">
                 الخيار الأمثل للمقاولات العامة والتشطيبات. خبرة واسعة، دقة في التنفيذ، والالتزام بالمواعيد هو ما يميزنا.
               </p>
-              
+
               <div className="flex flex-wrap gap-4">
                 <Link href="/services">
                   <Button size="lg" className="rounded-full text-lg px-8 py-6 shadow-xl shadow-primary/30 hover:scale-105 transition-transform">
@@ -63,7 +69,7 @@ export default function Home() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -71,9 +77,9 @@ export default function Home() {
               className="relative"
             >
               {/* construction team reviewing blueprints */}
-              <img 
-                src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop" 
-                alt="عن الشركة" 
+              <img
+                src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop"
+                alt="عن الشركة"
                 className="rounded-2xl shadow-2xl object-cover h-[500px] w-full"
               />
               <div className="absolute -bottom-8 -right-8 bg-primary text-primary-foreground p-8 rounded-2xl shadow-xl hidden md:block">
@@ -95,7 +101,7 @@ export default function Home() {
               <p className="text-lg text-muted-foreground leading-relaxed mb-8">
                 شركة ركائز البنيان هي صرح رائد في عالم المقاولات، تأسست على مبادئ الجودة والثقة. نحن نقدم حلولاً متكاملة تشمل الإنشاءات، التشطيبات، وأعمال الصيانة، مع التركيز على أدق التفاصيل لضمان رضا عملائنا.
               </p>
-              
+
               <ul className="space-y-4 mb-10">
                 {[
                   "فريق هندسي متخصص ذو كفاءة عالية",
@@ -136,7 +142,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services?.slice(0, 6).map((service, index) => (
-              <motion.div 
+              <motion.div
                 key={service.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -159,7 +165,7 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
-          
+
           <div className="text-center mt-12">
             <Link href="/services">
               <Button size="lg" className="rounded-full px-8 shadow-md hover:shadow-lg transition-all">
@@ -190,7 +196,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects?.slice(0, 3).map((project, index) => (
-              <motion.div 
+              <motion.div
                 key={project.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -198,9 +204,9 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group relative rounded-2xl overflow-hidden shadow-lg h-[400px]"
               >
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
+                <img
+                  src={project.image}
+                  alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
@@ -225,7 +231,7 @@ export default function Home() {
       <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-        
+
         <div className="container relative z-10 mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="font-bold tracking-wider mb-2 text-white/80">آراء العملاء</h2>
@@ -236,7 +242,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {reviews?.slice(0, 3).map((review, i) => (
-              <motion.div 
+              <motion.div
                 key={review.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -273,10 +279,10 @@ export default function Home() {
           <h3 className="text-center text-muted-foreground font-semibold mb-10">شركاء النجاح الموثوقين</h3>
           <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
             {partners?.map(partner => (
-              <img 
-                key={partner.id} 
-                src={partner.logo} 
-                alt={partner.name} 
+              <img
+                key={partner.id}
+                src={partner.logo}
+                alt={partner.name}
                 className="h-12 object-contain"
                 title={partner.name}
               />

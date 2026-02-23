@@ -5,22 +5,30 @@ import { Calendar, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
+import { SEO } from "@/components/seo";
 
 export default function Blog() {
   const { data: articles, isLoading } = useArticles();
 
   return (
     <div>
+      <SEO
+        title="المدونة"
+        description="مقالات ونصائح متخصصة في عالم المقاولات والبناء والتشطيبات من خبراء شركة ركائز البنيان للمقاولات العامة."
+        url="https://rakaezalbonyan.vercel.app/blog"
+        keywords="مدونة مقاولات, نصائح بناء, مقالات إنشاء, تشطيبات, ديكور"
+        type="article"
+      />
       {/* architecture and engineering workspace */}
-      <PageHero 
-        title="المدونة" 
+      <PageHero
+        title="المدونة"
         subtitle="أحدث المقالات، النصائح، والأخبار في عالم المقاولات والبناء"
         imageUrl="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1920&h=1080&fit=crop"
       />
-      
+
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 md:px-6">
-          
+
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map(i => (
@@ -34,7 +42,7 @@ export default function Blog() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {articles.map((article, index) => (
-                <motion.div 
+                <motion.div
                   key={article.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -42,9 +50,9 @@ export default function Blog() {
                   className="bg-card rounded-2xl overflow-hidden shadow-md border border-border group hover:shadow-xl transition-shadow flex flex-col"
                 >
                   <Link href={`/blog/${article.id}`} className="block h-56 overflow-hidden">
-                    <img 
-                      src={article.image} 
-                      alt={article.title} 
+                    <img
+                      src={article.image}
+                      alt={article.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </Link>

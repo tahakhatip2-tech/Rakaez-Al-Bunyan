@@ -5,11 +5,12 @@ import { ArrowRight, Calendar, User } from "lucide-react";
 import { Link } from "wouter";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
+import { SEO } from "@/components/seo";
 
 export default function ArticleDetails() {
   const [, params] = useRoute("/blog/:id");
   const id = params?.id ? Number(params.id) : 0;
-  
+
   const { data: article, isLoading, error } = useArticle(id);
 
   if (isLoading) return <div className="h-screen flex items-center justify-center text-xl">جاري التحميل...</div>;
@@ -17,11 +18,18 @@ export default function ArticleDetails() {
 
   return (
     <div>
-      <PageHero 
-        title={article.title} 
+      <SEO
+        title={article.title}
+        description={article.content.substring(0, 160)}
+        image={article.image}
+        url={`https://rakaezalbonyan.vercel.app/blog/${id}`}
+        type="article"
+      />
+      <PageHero
+        title={article.title}
         imageUrl={article.image}
       />
-      
+
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
