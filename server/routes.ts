@@ -3,6 +3,7 @@ import type { Server } from "http";
 import { storage } from "./storage.js";
 import { api } from "../shared/routes.js";
 import { z } from "zod";
+import { registerUploadRoute } from "./upload.js";
 
 async function seedDatabase() {
   const existingServices = await storage.getServices();
@@ -205,6 +206,9 @@ export async function registerRoutes(
     await storage.deletePartner(Number(req.params.id));
     res.status(204).send();
   });
+
+  // Upload route
+  registerUploadRoute(app);
 
   return httpServer;
 }

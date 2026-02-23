@@ -3,12 +3,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useForm } from "react-hook-form";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Trash2, Plus, LayoutGrid, Construction, FileText, MessageSquare, Users } from "lucide-react";
+import { ImageUpload } from "@/components/image-upload";
 
 import { useProjects, useCreateProject, useDeleteProject } from "@/hooks/use-projects";
 import { useServices, useCreateService, useDeleteService } from "@/hooks/use-services";
@@ -16,11 +17,11 @@ import { useArticles, useCreateArticle, useDeleteArticle } from "@/hooks/use-art
 import { useReviews, useCreateReview, useDeleteReview } from "@/hooks/use-reviews";
 import { usePartners, useCreatePartner, useDeletePartner } from "@/hooks/use-partners";
 
-const projectSchema = z.object({ title: z.string().min(1), description: z.string().min(1), image: z.string().url(), category: z.string().min(1) });
-const serviceSchema = z.object({ title: z.string().min(1), description: z.string().min(1), image: z.string().url(), icon: z.string().optional() });
-const articleSchema = z.object({ title: z.string().min(1), content: z.string().min(1), image: z.string().url() });
+const projectSchema = z.object({ title: z.string().min(1), description: z.string().min(1), image: z.string().min(1, "الصورة مطلوبة"), category: z.string().min(1) });
+const serviceSchema = z.object({ title: z.string().min(1), description: z.string().min(1), image: z.string().min(1, "الصورة مطلوبة"), icon: z.string().optional() });
+const articleSchema = z.object({ title: z.string().min(1), content: z.string().min(1), image: z.string().min(1, "الصورة مطلوبة") });
 const reviewSchema = z.object({ customerName: z.string().min(1), content: z.string().min(1), rating: z.coerce.number().min(1).max(5) });
-const partnerSchema = z.object({ name: z.string().min(1), logo: z.string().url() });
+const partnerSchema = z.object({ name: z.string().min(1), logo: z.string().min(1, "الشعار مطلوب") });
 
 export default function Admin() {
   return (
@@ -30,7 +31,7 @@ export default function Admin() {
           <h2 className="text-3xl font-bold font-display text-slate-900 mb-2">إدارة محتوى الموقع</h2>
           <p className="text-muted-foreground">تحكم في جميع أقسام الموقع من مكان واحد بكل سهولة</p>
         </div>
-        
+
         <Tabs defaultValue="projects" className="w-full">
           <TabsList className="mb-8 w-full flex flex-wrap h-auto p-1 bg-white border shadow-sm rounded-xl overflow-hidden">
             <TabsTrigger value="projects" className="flex-1 text-base py-3 data-[state=active]:bg-primary data-[state=active]:text-white">
@@ -54,7 +55,7 @@ export default function Admin() {
               الشركاء
             </TabsTrigger>
           </TabsList>
-          
+
           <div className="grid gap-8">
             <TabsContent value="projects" className="mt-0 focus-visible:outline-none"><ProjectsAdmin /></TabsContent>
             <TabsContent value="services" className="mt-0 focus-visible:outline-none"><ServicesAdmin /></TabsContent>
@@ -78,7 +79,7 @@ function AdminSectionHeader({ title, icon: Icon, onAdd }: { title: string, icon:
         <h3 className="text-2xl font-bold">{title}</h3>
       </div>
       <Button onClick={onAdd} className="rounded-xl shadow-md shadow-primary/20 bg-primary hover:bg-primary/90">
-        <Plus className="w-4 h-4 ml-2"/>
+        <Plus className="w-4 h-4 ml-2" />
         إضافة جديد
       </Button>
     </div>
@@ -93,7 +94,7 @@ function ProjectsAdmin() {
   const form = useForm<z.infer<typeof projectSchema>>({ resolver: zodResolver(projectSchema) });
 
   const onSubmit = (data: z.infer<typeof projectSchema>) => {
-    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); }});
+    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); } });
   };
 
   return (
@@ -115,8 +116,15 @@ function ProjectsAdmin() {
                 <Input {...form.register("category")} placeholder="مثال: سكني / تجاري" className="h-11" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">رابط الصورة</label>
-                <Input {...form.register("image")} placeholder="https://..." className="h-11" dir="ltr" />
+                <label className="text-sm font-medium">صورة المشروع</label>
+                <Controller
+                  name="image"
+                  control={form.control}
+                  render={({ field }) => (
+                    <ImageUpload value={field.value || ""} onChange={field.onChange} />
+                  )}
+                />
+                {form.formState.errors.image && <p className="text-sm text-destructive">{form.formState.errors.image.message}</p>}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">الوصف</label>
@@ -126,7 +134,7 @@ function ProjectsAdmin() {
             </form>
           </DialogContent>
         </Dialog>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items?.map(item => (
             <div key={item.id} className="group relative bg-white border rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
@@ -136,13 +144,13 @@ function ProjectsAdmin() {
               <div className="p-4">
                 <p className="font-bold text-lg mb-1">{item.title}</p>
                 <p className="text-sm text-muted-foreground">{item.category}</p>
-                <Button 
-                  variant="destructive" 
-                  size="icon" 
+                <Button
+                  variant="destructive"
+                  size="icon"
                   className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => {if(confirm('هل أنت متأكد من حذف هذا المشروع؟')) del.mutate(item.id)}}
+                  onClick={() => { if (confirm('هل أنت متأكد من حذف هذا المشروع؟')) del.mutate(item.id) }}
                 >
-                  <Trash2 className="w-4 h-4"/>
+                  <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             </div>
@@ -161,7 +169,7 @@ function ServicesAdmin() {
   const form = useForm<z.infer<typeof serviceSchema>>({ resolver: zodResolver(serviceSchema) });
 
   const onSubmit = (data: z.infer<typeof serviceSchema>) => {
-    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); }});
+    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); } });
   };
 
   return (
@@ -175,8 +183,18 @@ function ServicesAdmin() {
             <DialogHeader><DialogTitle className="text-2xl font-bold text-center">إضافة خدمة جديدة</DialogTitle></DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
               <Input {...form.register("title")} placeholder="عنوان الخدمة" className="h-11" />
-              <Input {...form.register("image")} placeholder="رابط الصورة" className="h-11" dir="ltr" />
               <Input {...form.register("icon")} placeholder="اسم الأيقونة (اختياري)" className="h-11" />
+              <div className="space-y-2">
+                <label className="text-sm font-medium">صورة الخدمة</label>
+                <Controller
+                  name="image"
+                  control={form.control}
+                  render={({ field }) => (
+                    <ImageUpload value={field.value || ""} onChange={field.onChange} />
+                  )}
+                />
+                {form.formState.errors.image && <p className="text-sm text-destructive">{form.formState.errors.image.message}</p>}
+              </div>
               <Textarea {...form.register("description")} placeholder="وصف الخدمة..." rows={4} className="resize-none" />
               <Button type="submit" disabled={create.isPending} className="w-full h-11 text-lg font-bold rounded-xl mt-4">حفظ الخدمة</Button>
             </form>
@@ -191,7 +209,7 @@ function ServicesAdmin() {
                 </div>
                 <p className="font-bold">{item.title}</p>
               </div>
-              <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => {if(confirm('هل أنت متأكد من حذف هذه الخدمة؟')) del.mutate(item.id)}}><Trash2 className="w-4 h-4"/></Button>
+              <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => { if (confirm('هل أنت متأكد من حذف هذه الخدمة؟')) del.mutate(item.id) }}><Trash2 className="w-4 h-4" /></Button>
             </div>
           ))}
         </div>
@@ -208,7 +226,7 @@ function ArticlesAdmin() {
   const form = useForm<z.infer<typeof articleSchema>>({ resolver: zodResolver(articleSchema) });
 
   const onSubmit = (data: z.infer<typeof articleSchema>) => {
-    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); }});
+    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); } });
   };
 
   return (
@@ -222,8 +240,18 @@ function ArticlesAdmin() {
             <DialogHeader><DialogTitle className="text-2xl font-bold text-center">إضافة مقال جديد</DialogTitle></DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
               <Input {...form.register("title")} placeholder="عنوان المقال" className="h-11" />
-              <Input {...form.register("image")} placeholder="رابط الصورة" className="h-11" dir="ltr" />
-              <Textarea {...form.register("content")} placeholder="محتوى المقال..." rows={8} className="resize-none" />
+              <div className="space-y-2">
+                <label className="text-sm font-medium">صورة المقال</label>
+                <Controller
+                  name="image"
+                  control={form.control}
+                  render={({ field }) => (
+                    <ImageUpload value={field.value || ""} onChange={field.onChange} />
+                  )}
+                />
+                {form.formState.errors.image && <p className="text-sm text-destructive">{form.formState.errors.image.message}</p>}
+              </div>
+              <Textarea {...form.register("content")} placeholder="محتوى المقال..." rows={6} className="resize-none" />
               <Button type="submit" disabled={create.isPending} className="w-full h-11 text-lg font-bold rounded-xl mt-4">نشر المقال</Button>
             </form>
           </DialogContent>
@@ -232,7 +260,7 @@ function ArticlesAdmin() {
           {items?.map(item => (
             <div key={item.id} className="group flex justify-between items-center p-5 border rounded-xl bg-white hover:border-primary/30 transition-colors">
               <p className="font-bold text-lg">{item.title}</p>
-              <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => {if(confirm('متأكد؟')) del.mutate(item.id)}}><Trash2 className="w-4 h-4"/></Button>
+              <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => { if (confirm('متأكد؟')) del.mutate(item.id) }}><Trash2 className="w-4 h-4" /></Button>
             </div>
           ))}
         </div>
@@ -246,10 +274,10 @@ function ReviewsAdmin() {
   const create = useCreateReview();
   const del = useDeleteReview();
   const [open, setOpen] = useState(false);
-  const form = useForm<z.infer<typeof reviewSchema>>({ resolver: zodResolver(reviewSchema), defaultValues: {rating: 5} });
+  const form = useForm<z.infer<typeof reviewSchema>>({ resolver: zodResolver(reviewSchema), defaultValues: { rating: 5 } });
 
   const onSubmit = (data: z.infer<typeof reviewSchema>) => {
-    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); }});
+    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); } });
   };
 
   return (
@@ -281,7 +309,7 @@ function ReviewsAdmin() {
                 </div>
                 <p className="text-sm text-muted-foreground italic">"{item.content}"</p>
               </div>
-              <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => {if(confirm('متأكد؟')) del.mutate(item.id)}}><Trash2 className="w-4 h-4"/></Button>
+              <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => { if (confirm('متأكد؟')) del.mutate(item.id) }}><Trash2 className="w-4 h-4" /></Button>
             </div>
           ))}
         </div>
@@ -298,7 +326,7 @@ function PartnersAdmin() {
   const form = useForm<z.infer<typeof partnerSchema>>({ resolver: zodResolver(partnerSchema) });
 
   const onSubmit = (data: z.infer<typeof partnerSchema>) => {
-    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); }});
+    create.mutate(data, { onSuccess: () => { setOpen(false); form.reset(); } });
   };
 
   return (
@@ -312,7 +340,17 @@ function PartnersAdmin() {
             <DialogHeader><DialogTitle className="text-2xl font-bold text-center">إضافة شريك جديد</DialogTitle></DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
               <Input {...form.register("name")} placeholder="اسم الشركة الشريكة" className="h-11" />
-              <Input {...form.register("logo")} placeholder="رابط الشعار" className="h-11" dir="ltr" />
+              <div className="space-y-2">
+                <label className="text-sm font-medium">شعار الشركة</label>
+                <Controller
+                  name="logo"
+                  control={form.control}
+                  render={({ field }) => (
+                    <ImageUpload value={field.value || ""} onChange={field.onChange} />
+                  )}
+                />
+                {form.formState.errors.logo && <p className="text-sm text-destructive">{form.formState.errors.logo.message}</p>}
+              </div>
               <Button type="submit" disabled={create.isPending} className="w-full h-11 text-lg font-bold rounded-xl mt-4">حفظ الشريك</Button>
             </form>
           </DialogContent>
@@ -322,13 +360,13 @@ function PartnersAdmin() {
             <div key={item.id} className="group relative p-6 border rounded-2xl bg-white flex flex-col items-center justify-center hover:border-primary/30 transition-all">
               <img src={item.logo} alt={item.name} className="h-16 object-contain mb-4" />
               <p className="font-bold text-center">{item.name}</p>
-              <Button 
-                variant="destructive" 
-                size="icon" 
-                className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity" 
-                onClick={() => {if(confirm('متأكد؟')) del.mutate(item.id)}}
+              <Button
+                variant="destructive"
+                size="icon"
+                className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => { if (confirm('متأكد؟')) del.mutate(item.id) }}
               >
-                <Trash2 className="w-4 h-4"/>
+                <Trash2 className="w-4 h-4" />
               </Button>
             </div>
           ))}
