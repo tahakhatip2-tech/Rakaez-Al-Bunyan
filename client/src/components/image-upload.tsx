@@ -27,30 +27,43 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
         setIsUploading(true);
 
         try {
-            const formData = new FormData();
-            formData.append("image", file);
-
-            const res = await fetch("/api/upload", {
+            // الخطوة 1: طلب Signed URL من الخادم
+            const urlRes = await fetch("/api/get-upload-url", {
                 method: "POST",
-                body: formData,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    filename: file.name,
+                    contentType: file.type,
+                }),
             });
 
-            let data: any;
+            let urlData: any;
             try {
-                data = await res.json();
+                urlData = await urlRes.json();
             } catch {
-                throw new Error("استجابة غير صالحة من الخادم — تأكد من تشغيل السيرفر بمفاتيح Supabase");
+                throw new Error("استجابة غير صالحة من الخادم");
             }
 
-            if (!res.ok) {
-                throw new Error(data.message || "فشل رفع الصورة");
+            if (!urlRes.ok) {
+                throw new Error(urlData.message || "فشل الحصول على رابط الرفع");
             }
 
-            if (!data.url) {
-                throw new Error("لم يتم إرجاع رابط الصورة");
+            const { signedUrl, publicUrl } = urlData;
+
+            // الخطوة 2: رفع الملف مباشرةً لـ Supabase
+            const uploadRes = await fetch(signedUrl, {
+                method: "PUT",
+                headers: { "Content-Type": file.type },
+                body: file,
+            });
+
+            if (!uploadRes.ok) {
+                const errText = await uploadRes.text();
+                throw new Error("فشل رفع الصورة إلى التخزين: " + errText);
             }
 
-            onChange(data.url);
+            // الخطوة 3: تحديث القيمة بالرابط العام
+            onChange(publicUrl);
         } catch (err: any) {
             setError(err.message || "حدث خطأ أثناء رفع الصورة");
         } finally {
@@ -85,7 +98,6 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
             />
 
             {value ? (
-                // صورة تمت إضافتها - عرض المعاينة
                 <div className="relative group rounded-xl overflow-hidden border border-border aspect-video bg-muted">
                     <img
                         src={value}
@@ -103,26 +115,16 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
                             onClick={() => inputRef.current?.click()}
                             disabled={isUploading}
                         >
-                            {isUploading ? (
-                                <Loader2 className="w-4 h-4 animate-spin ml-1" />
-                            ) : (
-                                <Upload className="w-4 h-4 ml-1" />
-                            )}
+                            {isUploading ? <Loader2 className="w-4 h-4 animate-spin ml-1" /> : <Upload className="w-4 h-4 ml-1" />}
                             تغيير
                         </Button>
-                        <Button
-                            type="button"
-                            size="sm"
-                            variant="destructive"
-                            onClick={handleRemove}
-                        >
+                        <Button type="button" size="sm" variant="destructive" onClick={handleRemove}>
                             <X className="w-4 h-4 ml-1" />
                             حذف
                         </Button>
                     </div>
                 </div>
             ) : (
-                // منطقة الرفع
                 <div className="space-y-2">
                     <button
                         type="button"
@@ -174,9 +176,7 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
                                 className="text-sm h-9"
                                 dir="ltr"
                             />
-                            <Button type="button" size="sm" onClick={handleUrlSubmit} className="shrink-0">
-                                إضافة
-                            </Button>
+                            <Button type="button" size="sm" onClick={handleUrlSubmit} className="shrink-0">إضافة</Button>
                             <Button type="button" size="sm" variant="ghost" onClick={() => setShowUrlInput(false)}>
                                 <X className="w-4 h-4" />
                             </Button>
@@ -186,17 +186,19 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
             )}
 
             {error && (
-                <p className="text-sm text-destructive flex items-center gap-1 bg-destructive/10 p-2 rounded-lg">
-                    <X className="w-3 h-3 shrink-0" />
-                    {error}
-                    <button
-                        type="button"
-                        onClick={() => setShowUrlInput(true)}
-                        className="mr-auto text-xs underline"
-                    >
-                        أدخل رابطاً بدلاً من ذلك
-                    </button>
-                </p>
+                <div className="text-sm text-destructive flex items-start gap-2 bg-destructive/10 p-3 rounded-lg">
+                    <X className="w-4 h-4 shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                        <p>{error}</p>
+                        <button
+                            type="button"
+                            onClick={() => { setError(""); setShowUrlInput(true); }}
+                            className="text-xs underline mt-1 hover:no-underline"
+                        >
+                            استخدم رابط صورة بدلاً من ذلك
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );
