@@ -10,71 +10,86 @@ interface ImageUploadProps {
     className?: string;
 }
 
+const MAX_SIZE_MB = 2; // حد أقصى 2MB لتجنب تضخم قاعدة البيانات
 const PLACEHOLDER = "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop";
 
 export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
-    const [isUploading, setIsUploading] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState("");
     const [showUrlInput, setShowUrlInput] = useState(false);
     const [urlInput, setUrlInput] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         setError("");
-        setIsUploading(true);
 
-        try {
-            // الخطوة 1: طلب Signed URL من الخادم
-            const urlRes = await fetch("/api/get-upload-url", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    filename: file.name,
-                    contentType: file.type,
-                }),
-            });
-
-            let urlData: any;
-            try {
-                urlData = await urlRes.json();
-            } catch {
-                throw new Error("استجابة غير صالحة من الخادم");
-            }
-
-            if (!urlRes.ok) {
-                throw new Error(urlData.message || "فشل الحصول على رابط الرفع");
-            }
-
-            const { signedUrl, publicUrl } = urlData;
-
-            // الخطوة 2: رفع الملف مباشرةً لـ Supabase
-            const uploadRes = await fetch(signedUrl, {
-                method: "PUT",
-                headers: { "Content-Type": file.type },
-                body: file,
-            });
-
-            if (!uploadRes.ok) {
-                const errText = await uploadRes.text();
-                throw new Error("فشل رفع الصورة إلى التخزين: " + errText);
-            }
-
-            // الخطوة 3: تحديث القيمة بالرابط العام
-            onChange(publicUrl);
-        } catch (err: any) {
-            setError(err.message || "حدث خطأ أثناء رفع الصورة");
-        } finally {
-            setIsUploading(false);
-            if (inputRef.current) inputRef.current.value = "";
+        // التحقق من نوع الملف
+        if (!file.type.startsWith("image/")) {
+            setError("فقط ملفات الصور مسموحة (PNG, JPG, WEBP)");
+            return;
         }
+
+        // التحقق من الحجم
+        if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+            setError(`حجم الصورة كبير جداً. الحد الأقصى ${MAX_SIZE_MB}MB`);
+            return;
+        }
+
+        setIsProcessing(true);
+
+        // ضغط وتحويل الصورة إلى Base64
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const img = new Image();
+            img.onload = () => {
+                // ضغط الصورة عبر Canvas لتقليل الحجم
+                const canvas = document.createElement("canvas");
+                const MAX_WIDTH = 1200;
+                const MAX_HEIGHT = 800;
+                let { width, height } = img;
+
+                if (width > MAX_WIDTH) {
+                    height = (height * MAX_WIDTH) / width;
+                    width = MAX_WIDTH;
+                }
+                if (height > MAX_HEIGHT) {
+                    width = (width * MAX_HEIGHT) / height;
+                    height = MAX_HEIGHT;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d")!;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // تحويل إلى JPEG بجودة 85%
+                const compressed = canvas.toDataURL("image/jpeg", 0.85);
+                onChange(compressed);
+                setIsProcessing(false);
+            };
+            img.onerror = () => {
+                setError("تعذّر قراءة الصورة، جرب ملفاً آخر");
+                setIsProcessing(false);
+            };
+            img.src = reader.result as string;
+        };
+        reader.onerror = () => {
+            setError("تعذّر تحميل الملف");
+            setIsProcessing(false);
+        };
+        reader.readAsDataURL(file);
+
+        // إعادة تعيين input
+        if (inputRef.current) inputRef.current.value = "";
     };
 
     const handleUrlSubmit = () => {
-        if (urlInput.trim()) {
-            onChange(urlInput.trim());
+        const url = urlInput.trim();
+        if (url) {
+            onChange(url);
             setShowUrlInput(false);
             setUrlInput("");
             setError("");
@@ -98,6 +113,7 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
             />
 
             {value ? (
+                // معاينة الصورة
                 <div className="relative group rounded-xl overflow-hidden border border-border aspect-video bg-muted">
                     <img
                         src={value}
@@ -113,9 +129,9 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
                             size="sm"
                             variant="secondary"
                             onClick={() => inputRef.current?.click()}
-                            disabled={isUploading}
+                            disabled={isProcessing}
                         >
-                            {isUploading ? <Loader2 className="w-4 h-4 animate-spin ml-1" /> : <Upload className="w-4 h-4 ml-1" />}
+                            <Upload className="w-4 h-4 ml-1" />
                             تغيير
                         </Button>
                         <Button type="button" size="sm" variant="destructive" onClick={handleRemove}>
@@ -126,22 +142,23 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
                 </div>
             ) : (
                 <div className="space-y-2">
+                    {/* منطقة الرفع */}
                     <button
                         type="button"
                         onClick={() => inputRef.current?.click()}
-                        disabled={isUploading}
+                        disabled={isProcessing}
                         className={cn(
                             "w-full aspect-video rounded-xl border-2 border-dashed border-border",
                             "flex flex-col items-center justify-center gap-3",
                             "bg-muted/50 hover:bg-muted transition-colors cursor-pointer",
                             "text-muted-foreground hover:text-foreground",
-                            isUploading && "opacity-50 cursor-not-allowed"
+                            isProcessing && "opacity-50 cursor-not-allowed"
                         )}
                     >
-                        {isUploading ? (
+                        {isProcessing ? (
                             <>
                                 <Loader2 className="w-10 h-10 animate-spin text-primary" />
-                                <p className="font-medium">جاري رفع الصورة...</p>
+                                <p className="font-medium">جاري معالجة الصورة...</p>
                             </>
                         ) : (
                             <>
@@ -150,13 +167,13 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
                                 </div>
                                 <div className="text-center">
                                     <p className="font-semibold text-base">اضغط لاختيار صورة</p>
-                                    <p className="text-sm mt-1">PNG, JPG, WEBP حتى 10MB</p>
+                                    <p className="text-sm mt-1 opacity-70">PNG, JPG, WEBP — حتى {MAX_SIZE_MB}MB</p>
                                 </div>
                             </>
                         )}
                     </button>
 
-                    {/* خيار إدخال رابط يدوياً */}
+                    {/* إدخال رابط يدوي */}
                     {!showUrlInput ? (
                         <button
                             type="button"
@@ -175,6 +192,7 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
                                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleUrlSubmit())}
                                 className="text-sm h-9"
                                 dir="ltr"
+                                autoFocus
                             />
                             <Button type="button" size="sm" onClick={handleUrlSubmit} className="shrink-0">إضافة</Button>
                             <Button type="button" size="sm" variant="ghost" onClick={() => setShowUrlInput(false)}>
@@ -186,19 +204,10 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
             )}
 
             {error && (
-                <div className="text-sm text-destructive flex items-start gap-2 bg-destructive/10 p-3 rounded-lg">
-                    <X className="w-4 h-4 shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                        <p>{error}</p>
-                        <button
-                            type="button"
-                            onClick={() => { setError(""); setShowUrlInput(true); }}
-                            className="text-xs underline mt-1 hover:no-underline"
-                        >
-                            استخدم رابط صورة بدلاً من ذلك
-                        </button>
-                    </div>
-                </div>
+                <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg flex items-center gap-2">
+                    <X className="w-4 h-4 shrink-0" />
+                    {error}
+                </p>
             )}
         </div>
     );
